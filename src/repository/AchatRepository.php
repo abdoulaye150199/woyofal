@@ -63,6 +63,31 @@ class AchatRepository
         return $this->hydrate($data);
     }
     
+    public function findByCodeRecharge(string $codeRecharge): ?Achat
+    {
+        $sql = "SELECT * FROM achats WHERE code_recharge = :code_recharge";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':code_recharge', $codeRecharge);
+        $stmt->execute();
+        
+        $data = $stmt->fetch();
+        if (!$data) {
+            return null;
+        }
+        
+        return $this->hydrate($data);
+    }
+
+    public function existsByCodeRecharge(string $codeRecharge): bool 
+    {
+        $sql = "SELECT EXISTS(SELECT 1 FROM achats WHERE code_recharge = :code_recharge)";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue(':code_recharge', $codeRecharge);
+        $stmt->execute();
+        
+        return (bool) $stmt->fetchColumn();
+    }
+
     private function hydrate(array $data): Achat
     {
         $achat = new Achat($data['id']);

@@ -12,12 +12,12 @@ class CompteurRepository
     public function __construct()
     {
         $this->connection = Database::getInstance(
-            'pgsql',
-            'db',
-            5432,
-            'appwoyofal',
-            'postgres',
-            'madie'
+            DB_DRIVE,
+            DB_HOST,
+            DB_PORT,
+            DB_NAME,
+            DB_USER,
+            DB_PASSWORD
         )->getConnexion();
     }
 
