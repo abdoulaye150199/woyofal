@@ -37,4 +37,8 @@ RUN chmod +x /usr/local/bin/start.sh
 ENV PORT=8080
 EXPOSE 8080
 
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD curl -f http://localhost:${PORT}/health || exit 1
+
 CMD ["/usr/local/bin/start.sh"]
