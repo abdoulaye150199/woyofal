@@ -1,0 +1,30 @@
+{
+  "name": "woyofal",
+  "version": "1.0.0",
+  "description": "**Un starter kit PHP moderne** avec une architecture MVC minimaliste, une injection de dépendances simple via YAML, et des composants essentiels pour lancer rapidement vos projets PHP.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "railway up",
+    "logs": "railway logs",
+    "variables": "railway variables",
+    "status": "railway status",
+    "dev": "railway run php -S localhost:8081 -t public/",
+    "migrate": "railway run php migration/migration.php",
+    "seed": "railway run php seeders/seeder.php"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdoulaye150199/woyofal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abdoulaye150199/woyofal/issues"
+  },
+  "homepage": "https://github.com/abdoulaye150199/woyofal#readme",
+  "devDependencies": {
+    "@railway/cli": "^4.5.5"
+  }
+}
