@@ -39,7 +39,7 @@ RUN chmod +x /usr/local/bin/start.sh
 # Create log directories
 RUN mkdir -p /var/log/nginx && \
     mkdir -p /var/log/php-fpm && \
-    chown -R www-data:www-data /var/log/nginx /var/log/php-fpm
+    chown -R www-data:www-data /var/log
 
 # Port configuration
 ENV PORT=8080
