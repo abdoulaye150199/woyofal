@@ -2,4 +2,5 @@ docker-compose.yml
 Dockerfile
 vendor/
 .env
-apache.conf
+.env.local
+.env.*.local

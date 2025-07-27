@@ -3,7 +3,7 @@ builder = "php"
 buildCommand = "composer install --no-dev --optimize-autoloader"
 
 [deploy]
-startCommand = "php -S 0.0.0.0:$PORT -t public/"
+startCommand = "php -S 0.0.0.0:${PORT:-8080} -t public/"
 healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
