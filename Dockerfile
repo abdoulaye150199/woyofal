@@ -8,7 +8,9 @@ RUN apt-get update && apt-get install -y \
     nginx \
     gettext-base \
     curl && \
-    docker-php-ext-install pdo pdo_pgsql
+    docker-php-ext-install pdo pdo_pgsql && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -33,6 +35,11 @@ RUN chown -R www-data:www-data /var/www/html && \
 # Copy and set up start script
 COPY docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
+
+# Create log directories
+RUN mkdir -p /var/log/nginx && \
+    mkdir -p /var/log/php-fpm && \
+    chown -R www-data:www-data /var/log/nginx /var/log/php-fpm
 
 # Port configuration
 ENV PORT=8080
