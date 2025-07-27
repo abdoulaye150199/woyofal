@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libpq-dev \
     nginx \
-    gettext-base && \
+    gettext-base \
+    curl && \
     docker-php-ext-install pdo pdo_pgsql
 
 # Install Composer
