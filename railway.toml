@@ -1,6 +1,5 @@
 [build]
-builder = "php"
-buildCommand = "composer install --no-dev --optimize-autoloader"
+builder = "nixpacks"
 
 [deploy]
 startCommand = "php -S 0.0.0.0:${PORT:-8080} -t public/"
@@ -8,5 +7,5 @@ healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
 
-[env]
-PHP_VERSION = "8.2"
+[service]
+internal_port = 8080
