@@ -7,6 +7,13 @@ require_once '../app/config/bootstrap.php';
 
 use DevNoKage\Router;
 
+// Add this before your main routing logic
+if ($_SERVER['REQUEST_URI'] === '/health') {
+    header('Content-Type: text/plain');
+    echo 'OK';
+    exit;
+}
+
 Router::setRoute($routes);
 
 Router::resolve();
