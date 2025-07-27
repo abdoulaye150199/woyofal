@@ -1,38 +1,39 @@
 FROM php:8.2-fpm
 
-# Installation des dépendances système
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libpq-dev \
     nginx \
-    && docker-php-ext-install pdo pdo_pgsql
+    gettext-base && \
+    docker-php-ext-install pdo pdo_pgsql
 
-# Installation de Composer
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configuration Nginx
+# Configure Nginx
 COPY docker/nginx/default.conf /etc/nginx/conf.d/default.conf
 RUN rm -f /etc/nginx/sites-enabled/default
 
-# Configuration du répertoire de travail
+# Set working directory
 WORKDIR /var/www/html
 
-# Copie des fichiers du projet
+# Copy project files
 COPY . .
 
-# Installation des dépendances PHP
+# Install PHP dependencies
 RUN composer install --no-interaction --optimize-autoloader
 
-# Permissions pour le répertoire de l'application
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/public
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html && \
+    chmod -R 755 /var/www/html/public
 
-# Script de démarrage
+# Copy and set up start script
 COPY docker/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
-# Port pour Railway
+# Port configuration
 ENV PORT=8080
 EXPOSE 8080
 
