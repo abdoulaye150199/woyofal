@@ -32,6 +32,10 @@
     "start": "php -S 0.0.0.0:${PORT:-8080} -t public/",
     "post-install-cmd": [
       "php migration/migration.php"
+    ],
+    "railway:serve": [
+      "Composer\\Config::disableProcessTimeout",
+      "@php -S 0.0.0.0:${PORT:-8080} -t public/"
     ]
   }
 }
