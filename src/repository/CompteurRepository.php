@@ -23,18 +23,27 @@ class CompteurRepository
 
     public function findByNumero(string $numero): ?Compteur
     {
-        $sql = "SELECT * FROM compteurs WHERE numero = :numero AND actif = true";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':numero', $numero);
-        $stmt->execute();
+        try {
+            $sql = "SELECT * FROM compteurs WHERE numero = :numero AND actif = true";
+            $stmt = $this->connection->prepare($sql);
+            $stmt->bindParam(':numero', $numero);
+            
+            error_log("🔍 Recherche du compteur: " . $numero);
+            $stmt->execute();
 
-        $data = $stmt->fetch();
-        // Debugging line to check fetched data
-        if (!$data) {
-            return null;
+            $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+            error_log("📊 Données trouvées: " . json_encode($data));
+
+            if (!$data) {
+                error_log("❌ Aucun compteur trouvé pour: " . $numero);
+                return null;
+            }
+
+            return $this->hydrate($data);
+        } catch (\Exception $e) {
+            error_log("❌ Erreur dans findByNumero: " . $e->getMessage());
+            throw $e;
         }
-
-        return $this->hydrate($data);
     }
 
     public function save(Compteur $compteur): Compteur

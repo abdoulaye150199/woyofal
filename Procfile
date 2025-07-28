@@ -1,1 +1,0 @@
-web: composer railway:serve
