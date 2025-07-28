@@ -14,8 +14,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files first
-COPY composer.json composer.lock ./
+# Copy composer files and .env
+COPY composer.json composer.lock .env.example ./
+RUN cp .env.example .env
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
@@ -30,8 +31,10 @@ RUN chown -R www-data:www-data /var/www/html && \
 # Create and configure PHP config directory
 RUN mkdir -p /usr/local/etc/php/conf.d
 
-# Copy PHP configuration
-COPY docker/php/php.ini /usr/local/etc/php/conf.d/app.ini
+# Create PHP configuration file
+RUN echo "date.timezone = UTC" > /usr/local/etc/php/conf.d/app.ini \
+    && echo "display_errors = On" >> /usr/local/etc/php/conf.d/app.ini \
+    && echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/app.ini
 
 # Configure PHP-FPM
 RUN echo "clear_env = no" >> /usr/local/etc/php-fpm.d/www.conf
