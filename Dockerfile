@@ -27,7 +27,10 @@ COPY . .
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
-# Configure PHP
+# Create and configure PHP config directory
+RUN mkdir -p /usr/local/etc/php/conf.d
+
+# Copy PHP configuration
 COPY docker/php/php.ini /usr/local/etc/php/conf.d/app.ini
 
 # Configure PHP-FPM
@@ -40,5 +43,5 @@ RUN mkdir -p /var/log/php-fpm && \
 # Expose port 8081
 EXPOSE 8081
 
-# Start PHP built-in server instead of PHP-FPM
+# Start PHP built-in server
 CMD ["php", "-S", "0.0.0.0:8081", "-t", "public/"]
