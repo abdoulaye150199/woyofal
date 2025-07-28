@@ -14,8 +14,12 @@ if ($_SERVER['REQUEST_URI'] === '/health') {
     exit;
 }
 
-// Les routes sont définies dans route.web.php
-Router::setRoute($routes);
+// Make sure $routes is available from bootstrap.php
+if (!isset($routes) || !is_array($routes)) {
+    throw new RuntimeException('Routes configuration not found or invalid');
+}
 
+// Set routes
+Router::setRoute($routes);
 Router::resolve();
 

@@ -4,7 +4,7 @@ use DevNoKage\Enums\KeyRoute;
 use DevNoKage\ErrorController;
 use App\Controller\WoyofalController;
 
-$routes = [
+return [
     '/' => [
         KeyRoute::CONTROLLER->value => WoyofalController::class,
         KeyRoute::METHOD->value => 'index',

@@ -148,11 +148,26 @@ class WoyofalController
         }
     }
     
+    // Ajout de la méthode index manquante
+    public function index(): void 
+    {
+        $this->sendResponse([
+            'data' => [
+                'name' => 'API Woyofal',
+                'version' => '1.0.0',
+                'status' => 'running'
+            ],
+            'statut' => 'success',
+            'code' => 200,
+            'message' => 'Bienvenue sur l\'API Woyofal'
+        ]);
+    }
+
     private function sendResponse(array $data): void
     {
         // Définir les headers appropriés
         header('Content-Type: application/json; charset=utf-8');
-        http_response_code($data['code']);
+        http_response_code($data['code'] ?? 200);
         
         echo json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
