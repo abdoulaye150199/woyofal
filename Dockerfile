@@ -14,37 +14,29 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files and .env
-COPY composer.json composer.lock .env.example ./
-RUN cp .env.example .env
+# First copy only the composer files
+COPY composer.json composer.lock ./
 
-# Install PHP dependencies
+# Copy .env.example and create .env
+COPY .env.example .env
+
+# Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Copy project files
+# Copy the rest of the application
 COPY . .
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html && \
-    chmod -R 755 /var/www/html
+    chmod -R 755 /var/www/html && \
+    chmod 664 .env
 
-# Create and configure PHP config directory
-RUN mkdir -p /usr/local/etc/php/conf.d
+# Configure PHP
+RUN mkdir -p /usr/local/etc/php/conf.d && \
+    echo "date.timezone = UTC" > /usr/local/etc/php/conf.d/app.ini && \
+    echo "display_errors = On" >> /usr/local/etc/php/conf.d/app.ini && \
+    echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/app.ini
 
-# Create PHP configuration file
-RUN echo "date.timezone = UTC" > /usr/local/etc/php/conf.d/app.ini \
-    && echo "display_errors = On" >> /usr/local/etc/php/conf.d/app.ini \
-    && echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/app.ini
-
-# Configure PHP-FPM
-RUN echo "clear_env = no" >> /usr/local/etc/php-fpm.d/www.conf
-
-# Create log directory
-RUN mkdir -p /var/log/php-fpm && \
-    chown -R www-data:www-data /var/log/php-fpm
-
-# Expose port 8081
 EXPOSE 8081
 
-# Start PHP built-in server
 CMD ["php", "-S", "0.0.0.0:8081", "-t", "public/"]

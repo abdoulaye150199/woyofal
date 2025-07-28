@@ -11,7 +11,6 @@ try {
     // Utiliser les valeurs par défaut
 }
 
-// Définir les constantes avec des valeurs par défaut
 define('DB_DRIVE', $_ENV['DB_DRIVE'] ?? 'pgsql');
 define('DB_HOST', $_ENV['DB_HOST'] ?? 'caboose.proxy.rlwy.net');
 define('DB_PORT', $_ENV['DB_PORT'] ?? '23700');
