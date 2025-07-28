@@ -7,30 +7,14 @@ require_once '../app/config/bootstrap.php';
 
 use DevNoKage\Router;
 
-// Route de healthcheck
+// Add this before your main routing logic
 if ($_SERVER['REQUEST_URI'] === '/health') {
     header('Content-Type: text/plain');
     echo 'OK';
     exit;
 }
 
-// Routes API
-$routes = [
-    '/api/woyofal/compteur/{numero}' => [
-        'controller' => 'App\Controller\WoyofalController',
-        'method' => 'verifierCompteur'
-    ],
-    '/api/woyofal/acheter' => [
-        'controller' => 'App\Controller\WoyofalController',
-        'method' => 'acheter'
-    ],
-    // Route par défaut pour 404
-    '/404' => [
-        'controller' => 'DevNoKage\ErrorController',
-        'method' => '_404'
-    ]
-];
-
 Router::setRoute($routes);
+
 Router::resolve();
 
