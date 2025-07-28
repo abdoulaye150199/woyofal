@@ -57,6 +57,21 @@ services:
     networks:
       - woyofal-network
 
+  api:
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      - DB_HOST=caboose.proxy.rlwy.net
+      - DB_PORT=23700
+      - DB_NAME=railway
+      - DB_USER=postgres
+      - DB_PASSWORD=qNJEApvSDDxUlgZqYemJruixCTTpWjkm
+    volumes:
+      - .:/var/www/html
+    networks:
+      - woyofal-network
+
 networks:
   woyofal-network:
     driver: bridge

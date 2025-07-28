@@ -27,10 +27,18 @@ COPY . .
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
+# Configure PHP
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/app.ini
+
 # Configure PHP-FPM
 RUN echo "clear_env = no" >> /usr/local/etc/php-fpm.d/www.conf
 
-# Expose PHP-FPM port
-EXPOSE 9000
+# Create log directory
+RUN mkdir -p /var/log/php-fpm && \
+    chown -R www-data:www-data /var/log/php-fpm
 
-CMD ["php-fpm"]
+# Expose port 8081
+EXPOSE 8081
+
+# Start PHP built-in server instead of PHP-FPM
+CMD ["php", "-S", "0.0.0.0:8081", "-t", "public/"]
