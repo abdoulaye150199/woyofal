@@ -11,14 +11,26 @@ class CompteurRepository
 
     public function __construct()
     {
-        $this->connection = Database::getInstance(
-            DB_DRIVE,
-            DB_HOST,
-            DB_PORT,
-            DB_NAME,
-            DB_USER,
-            DB_PASSWORD
-        )->getConnexion();
+        try {
+            error_log("🔌 Tentative de connexion à la base de données");
+            error_log("Host: " . DB_HOST);
+            error_log("Port: " . DB_PORT);
+            error_log("Database: " . DB_NAME);
+            
+            $this->connection = Database::getInstance(
+                DB_DRIVE,    // pgsql
+                DB_HOST,     // caboose.proxy.rlwy.net
+                DB_PORT,     // 23700
+                DB_NAME,     // railway
+                DB_USER,     // postgres
+                DB_PASSWORD  // qNJEApvSDDxUlgZqYemJruixCTTpWjkm
+            )->getConnexion();
+            
+            error_log("✅ Connexion à la base de données réussie");
+        } catch (\Exception $e) {
+            error_log("❌ Erreur de connexion: " . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function findByNumero(string $numero): ?Compteur
