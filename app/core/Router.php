@@ -15,25 +15,49 @@ class Router
     
     public static function resolve(): void
     {
-        $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        $method = $_SERVER['REQUEST_METHOD'];
-        
-        // Chercher une route exacte
-        if (isset(self::$routes[$uri])) {
-            self::executeRoute(self::$routes[$uri]);
-            return;
-        }
-        
-        // Chercher une route avec paramètres
-        foreach (self::$routes as $route => $config) {
-            if (self::matchRoute($route, $uri)) {
-                self::executeRoute($config, self::extractParams($route, $uri));
+        try {
+            $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            $method = $_SERVER['REQUEST_METHOD'];
+            
+            error_log("🔍 URI demandée: " . $uri);
+            error_log("📝 Méthode HTTP: " . $method);
+
+            // Vérifier si la route existe exactement
+            if (isset(self::$routes[$uri])) {
+                error_log("✅ Route exacte trouvée");
+                self::executeRoute(self::$routes[$uri]);
                 return;
             }
+
+            // Chercher une route avec paramètres
+            foreach (self::$routes as $route => $config) {
+                if (self::matchRoute($route, $uri)) {
+                    error_log("✅ Route avec paramètres trouvée: " . $route);
+                    self::executeRoute($config, self::extractParams($route, $uri));
+                    return;
+                }
+            }
+
+            // Route 404
+            error_log("❌ Aucune route trouvée, retour 404");
+            header('HTTP/1.1 404 Not Found');
+            header('Content-Type: application/json');
+            echo json_encode([
+                'data' => null,
+                'statut' => 'error',
+                'code' => 404,
+                'message' => 'Route non trouvée'
+            ]);
+        } catch (\Exception $e) {
+            error_log("❌ Erreur dans le routeur: " . $e->getMessage());
+            header('HTTP/1.1 500 Internal Server Error');
+            echo json_encode([
+                'data' => null,
+                'statut' => 'error',
+                'code' => 500,
+                'message' => 'Erreur serveur: ' . $e->getMessage()
+            ]);
         }
-        
-        // Route 404
-        self::executeRoute(self::$routes['/404'] ?? self::$routes['/']);
     }
     
     private static function matchRoute(string $route, string $uri): bool
